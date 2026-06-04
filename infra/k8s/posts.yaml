@@ -1,0 +1,11 @@
+apiVersion: v1
+# kind : wants to create a pod.
+kind: Pod
+# metadata : the name of pod is posts.
+metadata:
+  name: posts
+# spec : the pod contains exactly one container and it's name is posts and the container is build using the image described.
+spec:
+  containers:
+    - name: posts
+      image: kadweyvaibhav/posts:0.0.1
