@@ -1,0 +1,61 @@
+apiVersion: skaffold/v4beta3
+kind: Config
+# manifests: We want to watch all the files inside infra/k8s, anytime we make changes in one of those files skaffold is going to automatically re apply that config file to oue kubernetes cluster. At the time when we start skaffold it will also apply all configs and also deletes when we stop
+manifests:
+  rawYaml:
+    - ./infra/k8s/*
+# Whenever skaffold makes changes to one of our images or re-builds the image it's going to try to push the image to the docker hub, so we can disable this default behaviour as we are using skaffold
+build:
+  local:
+    push: false
+  # artifacts: It tells about what things it needs to maintain and see, whenever something changes inside it, skaffold will take those changes and update the pod directly
+  # If something changes inside src It will put the whole code inside the pod, If changes are not inside the src it will rebuild the image
+  artifacts:
+    - image: kadweyvaibhav/client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.js"
+            dest: .
+    - image: kadweyvaibhav/comments
+      context: comments
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "*.js"
+            dest: .
+    - image: kadweyvaibhav/event-bus
+      context: event-bus
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "*.js"
+            dest: .
+    - image: kadweyvaibhav/moderation
+      context: moderation
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "*.js"
+            dest: .
+    - image: kadweyvaibhav/posts
+      context: posts
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "*.js"
+            dest: .
+    - image: kadweyvaibhav/query
+      context: query
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "*.js"
+            dest: .

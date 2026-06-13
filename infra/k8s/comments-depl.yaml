@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comments-depl
+spec:
+  # replicas:  Number of pods that we want to create running some particular image.
+  replicas: 1
+  # selector : take a look at all the pods that are created, find all the pods with the label of app: posts
+  selector:
+    matchLabels:
+      app: comments
+  # template: is where we specify the extact configuration of a pod that we want this deployment to create.
+  template:
+    metadata:
+      labels:
+        app: comments
+    spec:
+      containers:
+        - name: comments
+          image: kadweyvaibhav/comments:latest
+          imagePullPolicy: Always
+
+
+# Configuration to create cluster IP service
+# To create multiple objects inside a singel yaml file we use ---
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: comments-srv
+spec:
+  # tells service what pod it gives access to
+  selector:
+    app: comments
+  type: ClusterIP # If we don't define it the kubernetes will default define the type to ClusterIP
+  ports:
+    - name: comments
+      protocol: TCP
+      port: 4001
+      targetPort: 4001

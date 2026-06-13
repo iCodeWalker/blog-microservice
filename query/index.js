@@ -52,7 +52,7 @@ app.post("/events", (req, res) => {
 app.listen(4002, async () => {
   console.log("Listening on 4002");
   /**When our service get's online or restart's it is good time to get the list of all the different events that have been emitted upto this point */
-  const res = await axios.get("http://localhost:4005/events");
+  const res = await axios.get("http://event-bus-srv:4005/events");
 
   for (let event of res.data) {
     console.log("Processing all the events", event);

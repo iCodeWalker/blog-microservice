@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: query-depl
+spec:
+  # replicas:  Number of pods that we want to create running some particular image.
+  replicas: 1
+  # selector : take a look at all the pods that are created, find all the pods with the label of app: query
+  selector:
+    matchLabels:
+      app: query
+  # template: is where we specify the extact configuration of a pod that we want this deployment to create.
+  template:
+    metadata:
+      labels:
+        app: query
+    spec:
+      containers:
+        - name: query
+          image: kadweyvaibhav/query:latest
+          imagePullPolicy: Always
+
+
+# Configuration to create cluster IP service
+# To create multiple objects inside a singel yaml file we use ---
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: query-srv
+spec:
+  # tells service what pod it gives access to
+  selector:
+    app: query
+  type: ClusterIP # If we don't define it the kubernetes will default define the type to ClusterIP
+  ports:
+    - name: query
+      protocol: TCP
+      port: 4002
+      targetPort: 4002
